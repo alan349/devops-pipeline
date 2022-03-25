@@ -1,0 +1,29 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  release:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: npm install
+      - name: Run Jest
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Push to gh-pages
+        uses: crazy-max/ghaction-github-pages@v1.3.0
+        with:
+          build_dir: build
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
